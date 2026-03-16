@@ -32,7 +32,8 @@ services:
       - REDIS_HOST=redis
       - TRUSTED_PROXIES=webproxy
       - OVERWRITEPROTOCOL=https
-      - NEXTCLOUD_TRUSTED_DOMAINS=192.168.64.10 188.230.150.18
+      - OVERWRITEHOST=188.230.150.18:58443
+      - NEXTCLOUD_TRUSTED_DOMAINS=*
     depends_on:
       - db
       - redis
@@ -41,7 +42,7 @@ services:
     image: nginx:alpine
     restart: always
     ports:
-      - "${HTTPS_PORT:-8443}:443"
+      - "${HTTPS_PORT:-58443}:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - certs:/etc/nginx/certs
