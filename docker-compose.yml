@@ -45,11 +45,16 @@ services:
       - "${HTTPS_PORT:-58443}:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/certs_source:ro
       - certs:/etc/nginx/certs
     command: >
       /bin/sh -c "
-      apk add --no-cache openssl &&
-      if [ ! -f /etc/nginx/certs/nginx.crt ]; then
+      if [ -f /certs_source/nginx.crt ] && [ -f /certs_source/nginx.key ]; then
+        echo \"Copying certificates from ./certs...\" &&
+        cp /certs_source/nginx.crt /etc/nginx/certs/nginx.crt &&
+        cp /certs_source/nginx.key /etc/nginx/certs/nginx.key
+      elif [ ! -f /etc/nginx/certs/nginx.crt ]; then
+        apk add --no-cache openssl &&
         echo \"Generating self-signed certificate...\" &&
         openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/certs/nginx.key -out /etc/nginx/certs/nginx.crt -subj '/C=US/ST=State/L=City/O=Organization/CN=localhost'
       fi &&
