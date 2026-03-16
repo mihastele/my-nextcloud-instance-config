@@ -32,6 +32,7 @@ services:
       - REDIS_HOST=redis
       - TRUSTED_PROXIES=webproxy
       - OVERWRITEPROTOCOL=https
+      - NEXTCLOUD_TRUSTED_DOMAINS=192.168.64.10 188.230.150.18
     depends_on:
       - db
       - redis
